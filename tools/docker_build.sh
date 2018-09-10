@@ -29,11 +29,15 @@ if [ ! -f "$ENVFILE" ] ; then
  exit
 fi
 
+. $ENVFILE
+
 ## Check which images to build
 BUILD_ALL=0
 BUILD_DB=0
 BUILD_FRONTEND=0
+BUILD_RABBITMQ=0
 BUILD_STATIC=0
+BUILD_WEBHOOKER=0
 BUILD_WORKER=0
 
 for argv in "$@" ; do
@@ -44,8 +48,14 @@ for argv in "$@" ; do
   "-d")
    BUILD_DB=1
   ;;
+  "-e")
+   BUILD_WEBHOOKER=1
+  ;;
   "-f")
    BUILD_FRONTEND=1
+  ;;
+  "-r")
+   BUILD_RABBITMQ=1
   ;;
   "-s")
    BUILD_STATIC=1
@@ -60,8 +70,16 @@ if [ $BUILD_ALL -eq 1 -o $BUILD_DB -eq 1 ] ; then
  IMAGES=`echo "$IMAGES nomos-db"`
 fi
 
+if [ $BUILD_ALL -eq 1 -o $BUILD_WEBHOOKER -eq 1 ] ; then
+ IMAGES=`echo "$IMAGES nomos-webhooker"`
+fi
+
 if [ $BUILD_ALL -eq 1 -o $BUILD_FRONTEND -eq 1 ] ; then
  IMAGES=`echo "$IMAGES nomos-frontend"`
+fi
+
+if [ $BUILD_ALL -eq 1 -o $BUILD_RABBITMQ -eq 1 ] ; then
+ IMAGES=`echo "$IMAGES nomos-rabbitmq"`
 fi
 
 if [ $BUILD_ALL -eq 1 -o $BUILD_STATIC -eq 1 ] ; then
@@ -98,7 +116,6 @@ for img in $IMAGES ; do
  echo docker build -t "vanhack/$img" -f docker/images/$img/Dockerfile .
  docker build -t "vanhack/$img" -f docker/images/$img/Dockerfile .
  RES=$?
- echo "RES: $RES"
  echo "================================"
 
  if [ $RES -ge 1 ] ; then

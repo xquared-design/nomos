@@ -235,3 +235,12 @@ docker/nomos.env
 #Coverage
 coverage.xml
 coverage/.
+
+# MySQL
+data/mysql/*.cnf
+data/mysql/*.pem
+data/mysql/ib*
+data/mysql/mysql*
+data/mysql/*_schema/
+data/mysql/sys/
+

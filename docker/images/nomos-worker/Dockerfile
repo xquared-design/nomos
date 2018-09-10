@@ -33,9 +33,9 @@ COPY ["app", "/www/app"]
 COPY ["vhs", "/www/vhs"]
 COPY ["migrations", "/www/migrations"]
 COPY ["tools", "/www/tools"]
-COPY ["docker", "/usr/local/docker"]
+COPY ["docker/images/nomos-worker/entrypoint.sh", "/entrypoint.sh"]
 COPY ["conf/config.ini.php.docker", "/www/conf/config.ini.php"]
 
 EXPOSE 9000
 
-CMD ["/usr/local/docker/docker_run.sh"]
+ENTRYPOINT ["/usr/local/bin/docker_run.sh"]
